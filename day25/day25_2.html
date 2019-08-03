@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="zhclock"></div>
+  <div id="enclock"></div>
+  <script>
+    function showTime(lang, elementId){
+      const clock = document.getElementById(elementId)
+      getTime(lang, clock)
+      setInterval(()=>{
+        getTime(lang, clock)
+      }, 1000);
+    }
+
+    function getTime(lang, element){
+      const myDate = new Date()
+      const year = myDate.getFullYear() + (lang === 'zh' ? '年' : '-') 
+      const month = appendZero(myDate.getMonth() + 1) + (lang === 'zh' ? '月' : '-') 
+      const day = appendZero(myDate.getDate()) + (lang === 'zh' ? '日' : ' ')
+      const week = (lang === 'zh' ? '星期' : '') + getWeek(myDate.getDay(), lang) + ' '
+      const hour = appendZero(myDate.getHours()) + (lang === 'zh' ? '点' : ':')
+      const minute = appendZero(myDate.getMinutes()) + (lang === 'zh' ? '分' : ':')
+      const second = appendZero(myDate.getSeconds()) + (lang === 'zh' ? '秒' : '')
+      const completeTime = year + month + day + week + hour + minute + second
+      element.innerHTML = completeTime
+    }
+
+    function getWeek(week, lang){
+      switch(week){
+        case 0:
+          return lang === 'zh' ? week = '天' : week = 'Sunday'
+        case 1:
+          return lang === 'zh' ? week = '一' : week = 'Monday'
+        case 2:
+          return lang === 'zh' ? week = '二' : week = 'Tuesday'  
+        case 3:
+          return lang === 'zh' ? week = '三' : week = 'Wednesday' 
+        case 4:
+          return lang === 'zh' ? week = '四' : week = 'Thursday' 
+        case 5:
+          return lang === 'zh' ? week = '五' : week = 'Friday' 
+        case 6:
+          return lang === 'zh' ? week = '六' : week = 'Saturday' 
+      }
+    }
+
+    function appendZero(time){
+      if(time < 10){
+        return time = '0' + time 
+      }
+      return time
+    }
+
+    showTime('zh', 'zhclock')
+    showTime('en', 'enclock')
+  </script>
+</body> 
+</html>
