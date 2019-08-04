@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <select id="year-select"></select>
+  
+  <select id="month-select"></select>
+  
+  <select id="day-select"></select>
+  
+  <select id="hour-select"></select>
+  
+  <select id="minite-select"></select>
+  
+  <select id="second-select"></select>
+  
+  <!-- 现在距离 2001年1月1日星期X HH:MM:SS 还有 X 天 X 小时 X 分 X 秒 -->
+  <p id="result-wrapper"></p>
+  <script>
+    // 通过传入的id获取元素
+    function getElement(elementId){
+      const element = document.getElementById(elementId)
+      return element
+    }
+    // 根据长度创建option，并添加进对应的select下
+    function createOptions(elementId, start, end){
+      const length = end - start
+      for(let i = 0; i <= length; i++){
+        const option = document.createElement('option')
+        option.innerText = appendZero(start)
+        option.value = appendZero(start)
+        getElement(elementId).appendChild(option)
+        start ++ 
+      }
+    }
+    // 时间小于10时，前面补0
+    function appendZero(time){
+      if(time < 10){
+        return time = '0' + time 
+      }
+      return time
+    }
+    // 获取当前被选中的日期并拼接
+    function getSeletedTime(){
+      const selectList = document.getElementsByTagName('select')
+      const time = defaultTime()
+      Array.prototype.forEach.call(selectList, function(element){
+        element.onchange = function(e){
+          const now = new Date()
+          const index = e.target.selectedIndex
+          const val = e.target.options[index].value
+          time[e.target.id] = val
+          const fullTime = new Date(time['year-select'], 
+                                    time['month-select'] - 1,
+                                    time['day-select'],
+                                    time['hour-select'],
+                                    time['minite-select'],
+                                    time['second-select'])
+          const result = now - fullTime
+          if(result > 0){
+            getElement('result-wrapper').innerText = '现在距离' + 
+                                                      time['year-select'] + '年' +
+                                                      time['month-select'] + '月' +
+                                                      time['day-select'] + '日' +
+                                                      time['hour-select'] + ':' +
+                                                      time['minite-select'] + ':' +
+                                                      time['second-select'] +
+                                                      '已经过去' + '天' + '小时' + '分' + '秒'
+          }else{
+            getElement('result-wrapper').innerText = '现在距离' + 
+                                                      time['year-select'] + '年' +
+                                                      time['month-select'] + '月' +
+                                                      time['day-select'] + '日' +
+                                                      time['hour-select'] + ':' +
+                                                      time['minite-select'] + ':' +
+                                                      time['second-select']+
+                                                      '还有' + '天' + '小时' + '分' + '秒'
+          }
+        }
+      })
+      
+    }
+
+    function defaultTime(){
+      const now = new Date()
+      const time = {
+        'year-select': 2000,
+        'month-select': 01,
+        'day-select': 01,
+        'hour-select': 00,
+        'minite-select': 00,
+        'second-select': 00
+      }
+      const result = now - time
+      if(result > 0){
+        getElement('result-wrapper').innerText = '现在距离' + 
+                                                  time['year-select'] + '年' +
+                                                  time['month-select'] + '月' +
+                                                  time['day-select'] + '日' +
+                                                  time['hour-select'] + ':' +
+                                                  time['minite-select'] + ':' +
+                                                  time['second-select'] + 
+                                                  '还有' + '天' + '小时' + '分' + '秒'
+
+      }else{
+        getElement('result-wrapper').innerText = '现在距离' + 
+                                                  time['year-select'] + '年' +
+                                                  time['month-select'] + '月' +
+                                                  time['day-select'] + '日' +
+                                                  time['hour-select'] + ':' +
+                                                  time['minite-select'] + ':' +
+                                                  time['second-select'] +
+                                                  '已经过去' + '天' + '小时' + '分' + '秒'
+      }
+      return time
+    }
+    
+    createOptions('year-select', 2000, 2030)
+    createOptions('month-select', 1, 12)
+    createOptions('day-select', 1, 31)
+    createOptions('hour-select', 0, 23)
+    createOptions('minite-select', 0, 59)
+    createOptions('second-select', 0, 59)
+    getSeletedTime()
+  </script>
+</body>
+</html>

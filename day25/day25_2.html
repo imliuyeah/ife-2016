@@ -29,6 +29,8 @@
       const second = appendZero(myDate.getSeconds()) + (lang === 'zh' ? '秒' : '')
       const completeTime = year + month + day + week + hour + minute + second
       element.innerHTML = completeTime
+
+      
     }
 
     function getWeek(week, lang){
