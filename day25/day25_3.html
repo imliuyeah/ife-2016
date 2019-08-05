@@ -19,22 +19,18 @@
   
   <select id="second-select"></select>
   
-  <!-- 现在距离 2001年1月1日星期X HH:MM:SS 还有 X 天 X 小时 X 分 X 秒 -->
+
   <p id="result-wrapper"></p>
   <script>
-    // 通过传入的id获取元素
-    function getElement(elementId){
-      const element = document.getElementById(elementId)
-      return element
-    }
     // 根据长度创建option，并添加进对应的select下
     function createOptions(elementId, start, end){
+      const element = document.getElementById(elementId)
       const length = end - start
       for(let i = 0; i <= length; i++){
         const option = document.createElement('option')
         option.innerText = appendZero(start)
         option.value = appendZero(start)
-        getElement(elementId).appendChild(option)
+        element.appendChild(option)
         start ++ 
       }
     }
@@ -45,88 +41,204 @@
       }
       return time
     }
-    // 获取当前被选中的日期并拼接
-    function getSeletedTime(){
-      const selectList = document.getElementsByTagName('select')
-      const time = defaultTime()
-      Array.prototype.forEach.call(selectList, function(element){
-        element.onchange = function(e){
-          const now = new Date()
-          const index = e.target.selectedIndex
-          const val = e.target.options[index].value
-          time[e.target.id] = val
-          const fullTime = new Date(time['year-select'], 
-                                    time['month-select'] - 1,
-                                    time['day-select'],
-                                    time['hour-select'],
-                                    time['minite-select'],
-                                    time['second-select'])
-          const result = now - fullTime
-          if(result > 0){
-            getElement('result-wrapper').innerText = '现在距离' + 
-                                                      time['year-select'] + '年' +
-                                                      time['month-select'] + '月' +
-                                                      time['day-select'] + '日' +
-                                                      time['hour-select'] + ':' +
-                                                      time['minite-select'] + ':' +
-                                                      time['second-select'] +
-                                                      '已经过去' + '天' + '小时' + '分' + '秒'
+    // 根据所选年、月，计算天数长度获取日
+    function dayLength(){
+      const year = document.getElementById('year-select')
+      const yearIndex = year.selectedIndex
+      const yearValue = year.options[yearIndex].value
+      const month = document.getElementById('month-select')
+      const monthIndex = month.selectedIndex
+      const monthValue = month.options[monthIndex].value
+      const day = document.getElementById('day-select')
+      day.options[28].style.display = 'block'
+      day.options[29].style.display = 'block'
+      day.options[30].style.display = 'block'
+      switch(monthValue){
+        case '04':
+        case '06':
+        case '09':
+        case '11':
+          diff = 1
+          break
+        case '02':
+          if(yearValue % 400 === 0 || (yearValue % 100 !== 0 && yearValue % 4 ===0)){
+            diff = 2
           }else{
-            getElement('result-wrapper').innerText = '现在距离' + 
-                                                      time['year-select'] + '年' +
-                                                      time['month-select'] + '月' +
-                                                      time['day-select'] + '日' +
-                                                      time['hour-select'] + ':' +
-                                                      time['minite-select'] + ':' +
-                                                      time['second-select']+
-                                                      '还有' + '天' + '小时' + '分' + '秒'
+            diff = 3
           }
-        }
-      })
-      
-    }
-
-    function defaultTime(){
-      const now = new Date()
-      const time = {
-        'year-select': 2000,
-        'month-select': 01,
-        'day-select': 01,
-        'hour-select': 00,
-        'minite-select': 00,
-        'second-select': 00
+          break
+        default:
+          diff = 0
       }
-      const result = now - time
-      if(result > 0){
-        getElement('result-wrapper').innerText = '现在距离' + 
-                                                  time['year-select'] + '年' +
-                                                  time['month-select'] + '月' +
-                                                  time['day-select'] + '日' +
-                                                  time['hour-select'] + ':' +
-                                                  time['minite-select'] + ':' +
-                                                  time['second-select'] + 
-                                                  '还有' + '天' + '小时' + '分' + '秒'
-
-      }else{
-        getElement('result-wrapper').innerText = '现在距离' + 
-                                                  time['year-select'] + '年' +
-                                                  time['month-select'] + '月' +
-                                                  time['day-select'] + '日' +
-                                                  time['hour-select'] + ':' +
-                                                  time['minite-select'] + ':' +
-                                                  time['second-select'] +
-                                                  '已经过去' + '天' + '小时' + '分' + '秒'
+      let j = 1
+      for(let i = 0; i < diff; i++){
+        day.options[day.length - j].style.display = 'none'
+        j++
       }
-      return time
     }
     
+    // 获取年
+    function yearSelected(){
+      const year = document.getElementById('year-select')
+      const yearIndex = year.selectedIndex
+      const yearValue = year.options[yearIndex].value
+      year.onchange = function(e){
+        dayLength()
+        showTime()
+        const yearIndex = year.selectedIndex
+        const yearValue = year.options[yearIndex].value
+        console.log('year: ' + yearValue)
+        return yearValue
+      }
+      return yearValue
+    }
+
+    // 获取月
+    function monthSelected(){
+      const month = document.getElementById('month-select')
+      const monthIndex = month.selectedIndex
+      const monthValue = month.options[monthIndex].value
+      month.onchange = function(){
+        dayLength()
+        showTime()
+        const monthIndex = month.selectedIndex
+        const monthValue = month.options[monthIndex].value
+        console.log('month: ' + monthValue)
+        return monthValue
+      }
+      return monthValue
+    }
+
+    // 获取日
+    function daySelected(){
+      const day = document.getElementById('day-select')
+      const dayIndex = day.selectedIndex
+        const dayValue = day.options[dayIndex].value
+      day.onchange = function(){
+        showTime()
+        const dayIndex = day.selectedIndex
+        const dayValue = day.options[dayIndex].value
+        console.log('day: ' + dayValue)
+        return dayValue
+      }
+      return dayValue
+    }
+
+    // 获取小时
+    function hourSelected(){
+      const hour = document.getElementById('hour-select')
+      const hourIndex = hour.selectedIndex
+      const hourValue = hour.options[hourIndex].value
+      hour.onchange = function(){
+        showTime()
+        const hourIndex = hour.selectedIndex
+        const hourValue = hour.options[hourIndex].value
+        console.log('hour: ' + hourValue)
+        return hourValue
+      }
+      return hourValue
+    }
+    
+    // 获取分钟
+    function miniteSelected(){
+      const minite = document.getElementById('minite-select')
+      const miniteIndex = minite.selectedIndex
+      const miniteValue = minite.options[miniteIndex].value
+      minite.onchange = function(){
+        showTime()
+        const miniteIndex = minite.selectedIndex
+        const miniteValue = minite.options[miniteIndex].value
+        console.log('minite: ' + miniteValue)
+        return miniteValue
+      }
+      return miniteValue
+    }
+
+    // 获取秒
+    function secondSelected(){
+      const second = document.getElementById('second-select')
+      const secondIndex = second.selectedIndex
+      const secondValue = second.options[secondIndex].value
+      second.onchange = function(){
+        showTime()
+        const secondIndex = second.selectedIndex
+        const secondValue = second.options[secondIndex].value
+        console.log('second: ' + secondValue)
+        return secondValue
+      }
+      return secondValue
+    }
+    // 处理星期
+    function getWeek(week, lang){
+      switch(week){
+        case 0:
+          return lang === 'zh' ? week = '天' : week = 'Sunday'
+        case 1:
+          return lang === 'zh' ? week = '一' : week = 'Monday'
+        case 2:
+          return lang === 'zh' ? week = '二' : week = 'Tuesday'  
+        case 3:
+          return lang === 'zh' ? week = '三' : week = 'Wednesday' 
+        case 4:
+          return lang === 'zh' ? week = '四' : week = 'Thursday' 
+        case 5:
+          return lang === 'zh' ? week = '五' : week = 'Friday' 
+        case 6:
+          return lang === 'zh' ? week = '六' : week = 'Saturday' 
+      }
+    }
+    // 设置显示的时间
+    function showTime(){ 
+      const year = yearSelected()
+      const month = monthSelected()
+      const day = daySelected()
+      const hour = hourSelected()
+      const minite = miniteSelected()
+      const second = secondSelected()
+      const box = document.getElementById('result-wrapper')
+      const time = new Date(year, month - 1, day, hour, minite, second)
+      const now = new Date()
+      let diff = time - now
+      if(diff > 0){
+        text = '还有'
+      }else{
+        diff = Math.abs(diff)
+        text = '已经过去'
+      }
+      const diffDay = Math.floor(diff/86400000)
+      const diffhour = Math.abs(now.getHours() - hour)
+      const diffminite = Math.abs(now.getMinutes() - minite)
+      const diffsecond = Math.abs(now.getSeconds() - second)
+      const week = getWeek(time.getDay(), 'zh')
+      box.innerText = '现在距离' + 
+                      year + '年' + 
+                      month + '月' + 
+                      day + '日' + 
+                      '星期' + week +
+                      ' ' + hour + ':' +
+                      minite + ':' +
+                      second + 
+                      text + 
+                      diffDay + '天' +
+                      diffhour + '小时' +
+                      diffminite + '分' +
+                      diffsecond + '秒'
+    }
+
+    // 定时调用
+    (function(){
+      setInterval(function(){
+        showTime()
+      }, 1000)
+    })()
+
     createOptions('year-select', 2000, 2030)
     createOptions('month-select', 1, 12)
     createOptions('day-select', 1, 31)
     createOptions('hour-select', 0, 23)
     createOptions('minite-select', 0, 59)
     createOptions('second-select', 0, 59)
-    getSeletedTime()
+    showTime()
   </script>
 </body>
 </html>
