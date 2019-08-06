@@ -22,6 +22,7 @@
 
   <p id="result-wrapper"></p>
   <script>
+    const time1 = new Date()
     // 根据长度创建option，并添加进对应的select下
     function createOptions(elementId, start, end){
       const element = document.getElementById(elementId)
@@ -84,7 +85,7 @@
       const year = document.getElementById('year-select')
       const yearIndex = year.selectedIndex
       const yearValue = year.options[yearIndex].value
-      year.onchange = function(e){
+      year.onchange = function(){
         dayLength()
         showTime()
         const yearIndex = year.selectedIndex
@@ -203,14 +204,17 @@
       let diff = time - now
       if(diff > 0){
         text = '还有'
+        diffhour = Math.abs(24 - now.getHours())
+        diffminite = Math.abs(59 - now.getMinutes())
+        diffsecond = Math.abs(59 - now.getSeconds())
       }else{
         diff = Math.abs(diff)
         text = '已经过去'
+        diffhour = Math.abs(now.getHours() - hour)
+        diffminite = Math.abs(now.getMinutes() - minite)
+        diffsecond = Math.abs(now.getSeconds() - second)
       }
       const diffDay = Math.floor(diff/86400000)
-      const diffhour = Math.abs(now.getHours() - hour)
-      const diffminite = Math.abs(now.getMinutes() - minite)
-      const diffsecond = Math.abs(now.getSeconds() - second)
       const week = getWeek(time.getDay(), 'zh')
       box.innerText = '现在距离' + 
                       year + '年' + 
@@ -241,6 +245,9 @@
     createOptions('minite-select', 0, 59)
     createOptions('second-select', 0, 59)
     showTime()
+
+    const time2 = new Date()
+    console.log(time2-time1)
   </script>
 </body>
 </html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <select id="year-select"></select>
+  
+  <select id="month-select"></select>
+  
+  <select id="day-select"></select>
+  
+  <select id="hour-select"></select>
+  
+  <select id="minute-select"></select>
+  
+  <select id="second-select"></select>
+  
+
+  <p id="result-wrapper"></p>
+  <script>
+    function setYear(){
+      const year = document.getElementById('year-select')
+      for(let i = 0, j = 0; i <= 30; i++, j++){
+        const option = document.createElement('option')
+        if(j < 10){
+          j = '0' + j
+        }
+        option.innerHTML = '20' + j
+        year.appendChild(option) 
+      }
+      
+    }
+
+    function setMonth(){
+      const month = document.getElementById('month-select')
+      for(let i = 1; i <= 12; i++){
+        const option = document.createElement('option')
+        if(i < 10){
+          i = '0' + i
+        }
+        option.innerHTML =  i
+        month.appendChild(option) 
+      }
+    }
+
+    function setDay(){
+      const day = document.getElementById('day-select')
+      for(let i = 1; i <= 31; i++){
+        const option = document.createElement('option')
+        if(i < 10){
+          i = '0' + i
+        }
+        option.innerHTML =  i
+        day.appendChild(option) 
+      }
+    }
+
+    function setHour(){
+      const hour = document.getElementById('hour-select')
+      for(let i = 0; i <= 23; i++){
+        const option = document.createElement('option')
+        if(i < 10){
+          i = '0' + i
+        }
+        option.innerHTML =  i
+        hour.appendChild(option) 
+      }
+    }
+
+    function setMinute(){
+      const minute = document.getElementById('minute-select')
+      for(let i = 0; i <= 59; i++){
+        const option = document.createElement('option')
+        if(i < 10){
+          i = '0' + i
+        }
+        option.innerHTML =  i
+        minute.appendChild(option) 
+      }
+    }
+
+    function setSecond(){
+      const second = document.getElementById('second-select')
+      for(let i = 0; i <= 59; i++){
+        const option = document.createElement('option')
+        if(i < 10){
+          i = '0' + i
+        }
+        option.innerHTML =  i
+        second.appendChild(option) 
+      }
+    }
+
+
+    setYear()
+    setMonth()
+    setDay()
+    setHour()
+    setMinute()
+    setSecond()
+  </script>
+</body>
+</html>
